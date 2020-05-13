@@ -1,104 +1,5 @@
 import React from "react";
 
-const quizData = [
-  {
-    category: "General Knowledge",
-    type: "multiple",
-    difficulty: "easy",
-    question:
-      "What was the name of the WWF professional wrestling tag team made up of the wrestlers Ax and Smash?",
-    correct_answer: "Demolition",
-    incorrect_answers: [
-      "The Dream Team",
-      "The Bushwhackers",
-      "The British Bulldogs",
-    ],
-  },
-  {
-    category: "General Knowledge",
-    type: "multiple",
-    difficulty: "easy",
-    question: "Area 51 is located in which US state?",
-    correct_answer: "Nevada",
-    incorrect_answers: ["Arizona", "New Mexico", "Utah"],
-  },
-  {
-    category: "General Knowledge",
-    type: "multiple",
-    difficulty: "easy",
-    question: "Which American president appears on a one dollar bill?",
-    correct_answer: "George Washington",
-    incorrect_answers: [
-      "Thomas Jefferson",
-      "Abraham Lincoln",
-      "Benjamin Franklin",
-    ],
-  },
-  {
-    category: "General Knowledge",
-    type: "multiple",
-    difficulty: "easy",
-    question:
-      "What is the shape of the toy invented by Hungarian professor Ernő Rubik?",
-    correct_answer: "Cube",
-    incorrect_answers: ["Sphere", "Cylinder", "Pyramid"],
-  },
-  {
-    category: "General Knowledge",
-    type: "multiple",
-    difficulty: "easy",
-    question: "Red Vines is a brand of what type of candy?",
-    correct_answer: "Licorice",
-    incorrect_answers: ["Lollipop", "Chocolate", "Bubblegum"],
-  },
-  {
-    category: "General Knowledge",
-    type: "multiple",
-    difficulty: "easy",
-    question: "What do the letters in the GMT time zone stand for?",
-    correct_answer: "Greenwich Mean Time",
-    incorrect_answers: [
-      "Global Meridian Time",
-      "General Median Time",
-      "Glasgow Man Time",
-    ],
-  },
-  {
-    category: "General Knowledge",
-    type: "multiple",
-    difficulty: "easy",
-    question: "How tall is the Burj Khalifa?",
-    correct_answer: "2,722 ft",
-    incorrect_answers: ["2,717 ft", "2,546 ft", "3,024 ft"],
-  },
-  {
-    category: "General Knowledge",
-    type: "multiple",
-    difficulty: "easy",
-    question:
-      "Which of the following card games revolves around numbers and basic math?",
-    correct_answer: "Uno",
-    incorrect_answers: ["Go Fish", "Twister", "Munchkin"],
-  },
-  {
-    category: "General Knowledge",
-    type: "multiple",
-    difficulty: "easy",
-    question: "In which fast food chain can you order a Jamocha Shake?",
-    correct_answer: "Arby&#039;s",
-    incorrect_answers: ["McDonald&#039;s", "Burger King", "Wendy&#039;s"],
-  },
-  {
-    category: "General Knowledge",
-    type: "multiple",
-    difficulty: "easy",
-    question:
-      "If you are caught &quot;Goldbricking&quot;, what are you doing wrong?",
-    correct_answer: "Slacking",
-    incorrect_answers: ["Smoking", "Stealing", "Cheating"],
-  },
-];
-
 class Quiz extends React.Component {
   state = {
     currentQuestion: 0,
@@ -107,24 +8,38 @@ class Quiz extends React.Component {
     score: 0,
     disabled: true,
     isEnd: false,
-    quizData,
+    quizData: [],
   };
 
   loadQuizData = () => {
-    // console.log(quizData[0].question);
-    let valueThree = quizData[this.state.currentQuestion].incorrect_answers;
-    let newValue = valueThree.concat(
-      quizData[this.state.currentQuestion].correct_answer
-    );
-    console.log(newValue);
-    console.log(quizData);
-    this.setState(() => {
-      return {
-        questions: quizData[this.state.currentQuestion].question,
-        answer: quizData[this.state.currentQuestion].correct_answer,
-        options: newValue,
-      };
-    });
+    fetch(
+      "https://opentdb.com/api.php?amount=10&category=9&difficulty=easy&type=multiple"
+    )
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        console.log(data);
+        if (data && data.results) {
+          let valueThree =
+            data.results[this.state.currentQuestion].incorrect_answers;
+          let newValue = valueThree.concat(
+            data.results[this.state.currentQuestion].correct_answer
+          );
+          console.log(newValue);
+          this.setState(() => {
+            return {
+              quizData: data.results,
+              questions: data.results[this.state.currentQuestion].question,
+              answer: data.results[this.state.currentQuestion].correct_answer,
+              options: newValue,
+            };
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   componentDidMount() {
@@ -147,35 +62,52 @@ class Quiz extends React.Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    let valueThree = quizData[this.state.currentQuestion].incorrect_answers;
-    let newValue = valueThree.concat(
-      quizData[this.state.currentQuestion].correct_answer
-    );
-    console.log(newValue);
-    if (this.state.currentQuestion !== prevState.currentQuestion) {
-      this.setState(() => {
-        return {
-          disabled: true,
-          questions: quizData[this.state.currentQuestion].question,
-          options: newValue,
-          answer: quizData[this.state.currentQuestion].answer,
-        };
+    fetch(
+      "https://opentdb.com/api.php?amount=10&category=9&difficulty=easy&type=multiple"
+    )
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        console.log(data);
+        if (data && data.results) {
+          let valueThree =
+            data.results[this.state.currentQuestion].incorrect_answers;
+          let newValue = valueThree.concat(
+            data.results[this.state.currentQuestion].correct_answer
+          );
+          console.log(newValue);
+          if (this.state.currentQuestion !== prevState.currentQuestion) {
+            this.setState(() => {
+              return {
+                quizData: data.results,
+
+                disabled: true,
+                questions: data.results[this.state.currentQuestion].question,
+                answer: data.results[this.state.currentQuestion].correct_answer,
+                options: newValue,
+              };
+            });
+          }
+        }
+      })
+      .catch((err) => {
+        console.log(err);
       });
-    }
   }
   //check answer
   checkAnswer = (answer) => {
     this.setState({ myAnswer: answer, disabled: false });
   };
   finishHandler = () => {
-    if (this.state.currentQuestion === quizData.length - 1) {
+    if (this.state.currentQuestion === this.state.quizData.length - 1) {
       this.setState({
         isEnd: true,
       });
     }
   };
   render() {
-    const { options, myAnswer, currentQuestion, isEnd } = this.state;
+    const { options, myAnswer, currentQuestion, isEnd, quizData } = this.state;
     console.log(options);
     if (isEnd) {
       return (
