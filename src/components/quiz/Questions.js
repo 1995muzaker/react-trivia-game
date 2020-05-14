@@ -35,9 +35,7 @@ const Questions = ({
       )}
       {/* //adding a finish button */}
       {currentQuestion === triviaData.length - 1 && (
-        <button className="" onClick={finishData}>
-          Finish
-        </button>
+        <button onClick={finishData}>Finish</button>
       )}
     </div>
   );

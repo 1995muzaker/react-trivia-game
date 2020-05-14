@@ -8,7 +8,7 @@ const FinalScore = ({ triviaData, scoreView }) => {
         <p>Correct Answer of all the Question</p>
         <ul>
           {triviaData.map((item, index) => (
-            <li className="ui floating message options" key={index}>
+            <li key={index}>
               {item.correct_answer}
             </li>
           ))}
