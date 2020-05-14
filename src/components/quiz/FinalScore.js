@@ -5,7 +5,7 @@ const FinalScore = ({ triviaData, scoreView }) => {
     <div>
       <div className="question-div">
         <h1>Your Final Score {scoreView} points.</h1>
-        <p>Correct Answer of all the Question</p>
+        <p>Below are the Correct Answer of all the Question</p>
         <ul>
           {triviaData.map((item, index) => (
             <li key={index}>

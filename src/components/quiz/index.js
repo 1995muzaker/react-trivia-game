@@ -10,7 +10,7 @@ class Quiz extends React.Component {
     optionsList: [],
     scoreView: 0,
     disabled: true,
-    isEnd: false,
+    completedAnswer: false,
     triviaData: [],
     loading: true,
   };
@@ -24,14 +24,12 @@ class Quiz extends React.Component {
           return res.json();
         })
         .then((data) => {
-          console.log(data);
           if (data && data.results) {
             let valueThree =
               data.results[this.state.currentQuestion].incorrect_answers;
             let newValue = valueThree.concat(
               data.results[this.state.currentQuestion].correct_answer
             );
-            console.log(newValue);
             this.setState(() => {
               return {
                 triviaData: data.results,
@@ -76,7 +74,6 @@ class Quiz extends React.Component {
         return res.json();
       })
       .then((data) => {
-        console.log(data);
         if (data && data.results) {
           let valueThree =
             data.results[this.state.currentQuestion].incorrect_answers;
@@ -112,7 +109,7 @@ class Quiz extends React.Component {
   finishData = () => {
     if (this.state.currentQuestion === this.state.triviaData.length - 1) {
       this.setState({
-        isEnd: true,
+        completedAnswer: true,
       });
     }
   };
@@ -121,7 +118,7 @@ class Quiz extends React.Component {
       optionsList,
       selectedAnswer,
       currentQuestion,
-      isEnd,
+      completedAnswer,
       triviaData,
       scoreView,
       questions,
@@ -135,7 +132,7 @@ class Quiz extends React.Component {
           </div>
         ) : (
           <div className="quiz-div">
-            {isEnd ? (
+            {completedAnswer ? (
               <FinalScore triviaData={triviaData} scoreView={scoreView} />
             ) : (
               <Questions

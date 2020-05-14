@@ -19,9 +19,8 @@ const Questions = ({
       <ul>
         {optionsList.map((option) => (
           <li
-            className={`
-         ${selectedAnswer === option ? "selected-answer" : null}
-         `}
+            key={option}
+            className={selectedAnswer === option ? "selected-answer" : null}
             onClick={() => checkData(option)}
           >
             {option}
